@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valoración Financiera: Creación de Valor y Eficiencia de Mercado</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root{
+    --ink:#16233B;
+    --ink-soft:#4A5568;
+    --paper:#EAEEEC;
+    --paper-raised:#F7F8F6;
+    --gold:#A9781F;
+    --gold-soft:#EFE3C6;
+    --teal:#1F6F63;
+    --teal-soft:#DCEAE6;
+    --red:#8C2F26;
+    --red-soft:#F3DEDA;
+    --line:#CBD0C6;
+    --shadow: 0 1px 2px rgba(22,35,59,0.06), 0 8px 24px rgba(22,35,59,0.06);
+  }
+  [data-theme="dark"]{
+    --ink:#EDEFEA;
+    --ink-soft:#A9B0AE;
+    --paper:#12181F;
+    --paper-raised:#1A222B;
+    --gold:#D6A94A;
+    --gold-soft:#3A2F16;
+    --teal:#5FB6A6;
+    --teal-soft:#173330;
+    --red:#E08A7D;
+    --red-soft:#3A1E1B;
+    --line:#2B333B;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    transition:background .25s ease, color .25s ease;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    margin:0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+
+  /* Ticker */
+  .ticker{
+    background:var(--ink);
+    color:var(--paper);
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom:1px solid var(--line);
+  }
+  .ticker-track{
+    display:inline-block;
+    padding-left:100%;
+    animation: scroll-ticker 38s linear infinite;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    padding-top:7px;
+    padding-bottom:7px;
+  }
+  .ticker-track span{ margin-right:2.5rem; opacity:0.85; }
+  .ticker-track span b{ color:var(--gold); font-weight:600; }
+  @keyframes scroll-ticker{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-100%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ticker-track{ animation:none; padding-left:1rem; }
+  }
+
+  /* Header */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    max-width:960px;
+    margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; cursor:pointer; }
+  .brand-mark{
+    width:38px; height:38px;
+    border:1.5px solid var(--ink);
+    border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .brand-mark svg{ width:19px; height:19px; }
+  .brand-text{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; }
+  .brand-text small{
+    display:block; font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:0.06em; color:var(--ink-soft); font-weight:500; margin-top:1px;
+  }
+  .theme-toggle{
+    width:38px; height:38px; border-radius:3px;
+    border:1.5px solid var(--line);
+    background:var(--paper-raised);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .theme-toggle svg{ width:17px; height:17px; }
+
+  main{ max-width:960px; margin:0 auto; padding:8px 32px 64px; }
+
+  /* Screens */
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* HOME */
+  .home-panel{
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    border-radius:4px;
+    padding:56px 48px;
+    margin-top:28px;
+    box-shadow:var(--shadow);
+  }
+  .oe-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:var(--teal);
+    border:1px solid var(--teal);
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:2px;
+    margin-bottom:22px;
+  }
+  .home-panel h1{
+    font-size:38px;
+    line-height:1.12;
+    max-width:11ch;
+  }
+  .home-panel .subhead{
+    color:var(--ink-soft);
+    font-size:16.5px;
+    line-height:1.6;
+    max-width:56ch;
+    margin-top:18px;
+  }
+  .trigger-q{
+    margin-top:26px;
+    padding:16px 20px;
+    border-left:3px solid var(--gold);
+    background:var(--gold-soft);
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:16px;
+    line-height:1.5;
+    color:var(--ink);
+    border-radius:0 3px 3px 0;
+  }
+  .home-actions{ display:flex; gap:14px; margin-top:36px; flex-wrap:wrap; }
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    font-weight:600;
+    padding:14px 24px;
+    border-radius:3px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    border:1.5px solid transparent;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--ink); color:var(--paper); }
+  .btn-primary:hover{ box-shadow:0 4px 14px rgba(22,35,59,0.25); }
+  .btn-secondary{ background:transparent; color:var(--ink); border-color:var(--ink); }
+  .btn-secondary:hover{ background:var(--paper); }
+  .btn svg{ width:17px; height:17px; }
+
+  /* THEORY */
+  .section-head{ margin-top:8px; }
+  .section-head h2{ font-size:28px; }
+  .section-head p{ color:var(--ink-soft); font-size:15px; margin-top:8px; max-width:60ch; }
+
+  .concept-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-top:28px;
+  }
+  @media (max-width:760px){ .concept-grid{ grid-template-columns:1fr; } }
+
+  .concept-card{
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    border-radius:3px;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .concept-index{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold);
+    letter-spacing:0.03em;
+  }
+  .concept-card h3{ font-size:17px; line-height:1.3; }
+  .concept-card p{ font-size:14px; line-height:1.55; color:var(--ink-soft); margin:0; }
+  .concept-card .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.03em;
+    padding:3px 8px;
+    border-radius:2px;
+    width:fit-content;
+    margin-top:2px;
+  }
+  .tag-debil{ background:var(--teal-soft); color:var(--teal); }
+  .tag-semifuerte{ background:var(--gold-soft); color:var(--gold); }
+  .tag-fuerte{ background:var(--red-soft); color:var(--red); }
+
+  .quiz-cta{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:36px; padding:24px 28px;
+    border:1px solid var(--line); border-radius:4px;
+    background:var(--paper-raised);
+    flex-wrap:wrap; gap:16px;
+  }
+  .quiz-cta p{ margin:0; color:var(--ink-soft); font-size:14.5px; max-width:38ch; }
+
+  /* QUIZ */
+  .quiz-top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-top:24px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--ink-soft);
+  }
+  .quiz-top b{ color:var(--ink); font-weight:600; }
+  .progress-track{
+    height:4px; background:var(--line); border-radius:2px; margin-top:10px; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; background:var(--gold); border-radius:2px; transition:width .35s ease;
+  }
+
+  .question-card{
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    border-radius:4px;
+    padding:36px 32px;
+    margin-top:24px;
+    box-shadow:var(--shadow);
+  }
+  .question-card h3{
+    font-size:22px; line-height:1.35; margin-bottom:26px; max-width:42ch;
+  }
+  .option-row{
+    display:flex; align-items:center; gap:14px;
+    border:1.5px solid var(--line);
+    border-radius:3px;
+    padding:15px 18px;
+    margin-bottom:11px;
+    cursor:pointer;
+    font-size:15px;
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .option-row:hover{ border-color:var(--ink-soft); }
+  .option-marker{
+    width:20px; height:20px; border-radius:50%;
+    border:1.5px solid var(--ink-soft);
+    flex-shrink:0;
+  }
+  .option-row.correct{ border-color:var(--teal); background:var(--teal-soft); }
+  .option-row.correct .option-marker{ border-color:var(--teal); background:var(--teal); }
+  .option-row.incorrect{ border-color:var(--red); background:var(--red-soft); }
+  .option-row.incorrect .option-marker{ border-color:var(--red); background:var(--red); }
+  .option-row.disabled{ cursor:default; }
+
+  .feedback-box{
+    margin-top:20px; padding:16px 18px; border-radius:3px;
+    font-size:14.5px; line-height:1.55; display:none;
+    border-left:3px solid var(--teal);
+    background:var(--teal-soft); color:var(--ink);
+  }
+  .feedback-box.wrong{ border-left-color:var(--red); background:var(--red-soft); }
+  .feedback-box.show{ display:block; }
+
+  .quiz-nav{ display:flex; justify-content:flex-end; margin-top:24px; }
+
+  /* RESULTS */
+  .results-panel{
+    text-align:center; padding:56px 40px; margin-top:24px;
+    border:1px solid var(--line); border-radius:4px; background:var(--paper-raised);
+  }
+  .results-score{
+    font-family:'Fraunces', serif; font-size:64px; font-weight:600; color:var(--gold); line-height:1;
+  }
+  .results-panel p{ color:var(--ink-soft); font-size:15.5px; margin-top:14px; max-width:44ch; margin-left:auto; margin-right:auto; }
+  .results-actions{ display:flex; gap:14px; justify-content:center; margin-top:30px; flex-wrap:wrap; }
+
+  footer{ text-align:center; padding:28px 0 40px; color:var(--ink-soft); font-size:13px; font-family:'IBM Plex Mono', monospace; }
+</style>
+</head>
+<body>
+
+<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<header>
+  <div class="brand" onclick="showScreen('home')">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9.5 12 3l9 6.5V21H3V9.5Z"/><path d="M9 21v-7h6v7"/></svg>
+    </div>
+    <div class="brand-text">Valoración Financiera<small>U1.2 · CREACIÓN DE VALOR Y EFICIENCIA</small></div>
+  </div>
+  <div class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+    <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="screen active" id="screen-home">
+    <div class="home-panel">
+      <div class="oe-label">OE2 · Analizar la creación de valor y la eficiencia de mercado como base de las decisiones financieras</div>
+      <h1>Creación de Valor y Eficiencia de Mercado</h1>
+      <p class="subhead">Un recorrido por el objetivo financiero de la empresa, la diferencia entre valor contable y valor económico, y las tres hipótesis de eficiencia de mercado: débil, semifuerte y fuerte.</p>
+      <div class="trigger-q">"¿Por qué la eficiencia del mercado condiciona las decisiones de inversión y financiación?"</div>
+      <div class="home-actions">
+        <button class="btn btn-primary" onclick="showScreen('theory')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2 2 0 0 1 6 3.5h6v17H6a2 2 0 0 1-2-2v-13Z"/><path d="M20 5.5a2 2 0 0 0-2-2h-6v17h6a2 2 0 0 0 2-2v-13Z"/></svg>
+          Aspectos Teóricos
+        </button>
+        <button class="btn btn-secondary" onclick="startQuiz()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11.5l2 2 4-4.5"/><rect x="3.5" y="3.5" width="17" height="17" rx="2"/></svg>
+          Quizz Interactivo
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEORY -->
+  <section class="screen" id="screen-theory">
+    <div class="section-head">
+      <h2>10 Conceptos Clave</h2>
+      <p>Revisa estos aspectos esenciales sobre creación de valor y eficiencia de mercado antes de poner a prueba tus conocimientos.</p>
+    </div>
+    <div class="concept-grid" id="conceptGrid"></div>
+    <div class="quiz-cta">
+      <p>Cuando termines de repasar los conceptos, pon a prueba lo aprendido.</p>
+      <button class="btn btn-primary" onclick="startQuiz()">¡Ir al Quizz!</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-top">
+      <span>Pregunta <b id="qNum">1</b> de <b>10</b></span>
+      <span>Puntaje: <b id="qScore">0</b></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+
+    <div class="question-card">
+      <h3 id="qText"></h3>
+      <div id="qOptions"></div>
+      <div class="feedback-box" id="qFeedback"></div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none;">Siguiente pregunta</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="screen" id="screen-results">
+    <div class="results-panel">
+      <div class="results-score" id="finalScore">0/10</div>
+      <h2 id="resultTitle" style="margin-top:14px;">Resultado</h2>
+      <p id="resultMsg"></p>
+      <div class="results-actions">
+        <button class="btn btn-secondary" onclick="showScreen('theory')">Repasar conceptos</button>
+        <button class="btn btn-primary" onclick="startQuiz()">Reintentar quiz</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Autor: Material de clase · U1.2 Valoración Financiera</footer>
+
+<script>
+const concepts = [
+  {tag:null, title:"1. Creación de Valor", body:"El objetivo financiero de la empresa no es maximizar el beneficio contable, sino el valor de mercado para el accionista. Se crea valor cuando la rentabilidad de las inversiones supera el costo de los recursos usados para financiarlas."},
+  {tag:null, title:"2. Objetivo Financiero vs. Beneficio Contable", body:"Maximizar ventas o utilidades del ejercicio puede ser engañoso: no considera el riesgo, el momento en que llegan los flujos, ni el costo de oportunidad del capital invertido."},
+  {tag:null, title:"3. Valor Contable vs. Valor Económico", body:"El valor contable refleja el costo histórico registrado en libros. El valor económico refleja las expectativas de flujos futuros descontados a una tasa que compensa el riesgo. Las decisiones deben basarse en el valor económico."},
+  {tag:null, title:"4. Mercado Eficiente: Concepto", body:"Un mercado es eficiente cuando los precios reflejan de forma completa y rápida toda la información disponible. Nadie puede batir sistemáticamente al mercado sin asumir un riesgo adicional."},
+  {tag:"tag-debil", tagLabel:"FORMA DÉBIL", title:"5. Hipótesis Débil", body:"Los precios reflejan toda la información contenida en las cotizaciones y volúmenes pasados. Si se cumple, el análisis técnico no genera ventajas sistemáticas."},
+  {tag:"tag-semifuerte", tagLabel:"FORMA SEMIFUERTE", title:"6. Hipótesis Semifuerte", body:"Los precios reflejan toda la información pública: históricos, estados financieros, noticias, resultados. Ni el análisis técnico ni el fundamental permiten batir sistemáticamente al mercado."},
+  {tag:"tag-fuerte", tagLabel:"FORMA FUERTE", title:"7. Hipótesis Fuerte", body:"Los precios reflejan absolutamente toda la información, incluida la privilegiada. Es la hipótesis más exigente y la más cuestionada por la evidencia empírica."},
+  {tag:null, title:"8. Implicaciones para la Inversión", body:"Si el mercado es al menos semifuerte, buscar activos infravalorados con análisis público es, en promedio, ineficaz. La estrategia racional prioriza diversificar y gestionar riesgo."},
+  {tag:null, title:"9. Implicaciones para la Financiación", body:"Si los precios ya reflejan la información disponible, no existen ventanas sistemáticas para financiarse más barato explotándola; el costo de capital de mercado es la referencia correcta para evaluar proyectos."},
+  {tag:null, title:"10. Anomalías y la Conexión con el Valor", body:"Efectos como el de enero, el de tamaño o la sobrerreacción a noticias muestran desviaciones de la eficiencia perfecta y dan origen a las finanzas conductuales. Aun así, la eficiencia es el supuesto que legitima el valor de mercado como medida de creación de valor."},
+];
+
+const questions = [
+  {q:"¿Cuál es el objetivo financiero correcto de la empresa según la teoría de creación de valor?",
+   opts:["Maximizar el beneficio contable del ejercicio","Maximizar el valor de mercado de la empresa para el accionista","Minimizar los impuestos pagados","Maximizar las ventas totales"], correct:1,
+   exp:"El objetivo financiero es maximizar el valor de mercado para el accionista, no el beneficio contable, que puede ignorar riesgo y costo de oportunidad."},
+  {q:"Una empresa crea valor cuando…",
+   opts:["Sus ventas crecen año con año","La rentabilidad de sus inversiones supera el costo de los recursos que las financian","Reduce su nivel de endeudamiento a cero","Reparte el 100% de sus beneficios en dividendos"], correct:1,
+   exp:"La creación de valor depende de que la rentabilidad obtenida supere el costo de los recursos empleados para financiar la inversión."},
+  {q:"¿Qué diferencia principal existe entre valor contable y valor económico?",
+   opts:["El valor contable usa precios de mercado y el económico usa costos históricos","No existe diferencia, son términos equivalentes","El valor contable refleja costos históricos; el valor económico refleja flujos futuros esperados descontados","El valor económico solo aplica a empresas que cotizan en bolsa"], correct:2,
+   exp:"El valor contable es un registro histórico; el valor económico anticipa flujos futuros descontados a una tasa que compensa el riesgo."},
+  {q:"En un mercado eficiente, los precios de los activos…",
+   opts:["Se fijan exclusivamente por el gobierno","Reflejan de forma completa y rápida toda la información disponible","Nunca cambian una vez publicados los estados financieros","Dependen solo de la oferta y demanda de corto plazo, sin relación con la información"], correct:1,
+   exp:"La eficiencia de mercado implica que los precios incorporan rápida y completamente la información disponible."},
+  {q:"Bajo la hipótesis débil de eficiencia de mercado…",
+   opts:["El análisis técnico basado en precios históricos no permite obtener ventajas sistemáticas","Ningún inversor puede usar información pública para tomar decisiones","Los precios reflejan también la información privilegiada","Los precios solo reflejan las expectativas de los directivos"], correct:0,
+   exp:"La forma débil dice que los precios ya incorporan el historial de cotizaciones, por lo que el análisis técnico no da ventaja sistemática."},
+  {q:"La hipótesis semifuerte de eficiencia sostiene que los precios reflejan…",
+   opts:["Solo los precios históricos","Toda la información pública disponible, incluidos estados financieros y anuncios","Únicamente la información privilegiada","Solo las recomendaciones de los analistas bursátiles"], correct:1,
+   exp:"La forma semifuerte extiende la eficiencia a toda la información pública, no solo a los precios pasados."},
+  {q:"¿Cuál es la hipótesis de eficiencia de mercado más exigente y más cuestionada empíricamente?",
+   opts:["La hipótesis débil","La hipótesis semifuerte","La hipótesis fuerte","Ninguna de las anteriores, todas tienen el mismo respaldo empírico"], correct:2,
+   exp:"La forma fuerte exige que incluso la información privilegiada esté reflejada en los precios, algo muy discutido por la evidencia empírica."},
+  {q:"Si el mercado es eficiente en su forma semifuerte, ¿qué implicación tiene esto para las decisiones de inversión?",
+   opts:["Buscar activos infravalorados con análisis fundamental público no genera ventajas sistemáticas en promedio","Cualquier inversor puede garantizar rendimientos superiores usando noticias públicas","El análisis técnico es la única estrategia rentable","Las decisiones de inversión dejan de tener riesgo"], correct:0,
+   exp:"Si la información pública ya está en los precios, explotarla con análisis fundamental no da ventaja sistemática en promedio."},
+  {q:"¿Qué son las 'anomalías de mercado' mencionadas como evidencia contraria a la eficiencia perfecta?",
+   opts:["Errores contables en los estados financieros","Desviaciones observadas empíricamente, como el efecto enero o la sobrerreacción a noticias, estudiadas por las finanzas conductuales","Cambios normales en las tasas de interés","Fusiones y adquisiciones entre empresas"], correct:1,
+   exp:"Las anomalías son patrones empíricos que se apartan de la eficiencia perfecta y motivaron el desarrollo de las finanzas conductuales."},
+  {q:"¿Por qué la eficiencia de mercado condiciona las decisiones de financiación de la empresa?",
+   opts:["Porque determina el sueldo de los directivos","Porque si los precios reflejan toda la información, no hay ventanas sistemáticas para financiarse más barato explotándola, y el costo de capital de mercado es la referencia correcta","Porque obliga a la empresa a repartir dividendos cada trimestre","Porque elimina por completo el riesgo de insolvencia"], correct:1,
+   exp:"La eficiencia implica que el costo de capital observado en el mercado es la referencia válida para evaluar y financiar proyectos."},
+];
+
+let currentQ = 0, score = 0, answered = false;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function buildConceptGrid(){
+  const grid = document.getElementById('conceptGrid');
+  grid.innerHTML = concepts.map(c => `
+    <div class="concept-card">
+      ${c.tag ? `<span class="tag ${c.tag}">${c.tagLabel}</span>` : `<span class="concept-index">CONCEPTO</span>`}
+      <h3>${c.title}</h3>
+      <p>${c.body}</p>
+    </div>`).join('');
+}
+
+function startQuiz(){
+  currentQ = 0; score = 0;
+  document.getElementById('qScore').textContent = 0;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const item = questions[currentQ];
+  document.getElementById('qNum').textContent = currentQ+1;
+  document.getElementById('progressFill').style.width = ((currentQ+1)/questions.length*100)+'%';
+  document.getElementById('qText').textContent = item.q;
+  document.getElementById('nextBtn').style.display = 'none';
+  const fb = document.getElementById('qFeedback');
+  fb.classList.remove('show','wrong');
+  fb.textContent = '';
+
+  const optsWrap = document.getElementById('qOptions');
+  optsWrap.innerHTML = item.opts.map((opt,i) => `
+    <div class="option-row" data-i="${i}" onclick="selectOption(${i})">
+      <div class="option-marker"></div>
+      <div>${opt}</div>
+    </div>`).join('');
+}
+
+function selectOption(i){
+  if(answered) return;
+  answered = true;
+  const item = questions[currentQ];
+  const rows = document.querySelectorAll('.option-row');
+  rows.forEach(r=>r.classList.add('disabled'));
+  rows[item.correct].classList.add('correct');
+  if(i !== item.correct){
+    rows[i].classList.add('incorrect');
+  } else {
+    score++;
+    document.getElementById('qScore').textContent = score;
+  }
+  const fb = document.getElementById('qFeedback');
+  fb.textContent = (i===item.correct ? '✓ Correcto. ' : '✗ Incorrecto. ') + item.exp;
+  fb.classList.add('show');
+  if(i !== item.correct) fb.classList.add('wrong');
+
+  document.getElementById('nextBtn').style.display = 'inline-flex';
+  document.getElementById('nextBtn').textContent = currentQ < questions.length-1 ? 'Siguiente pregunta' : 'Ver resultado';
+}
+
+function nextQuestion(){
+  currentQ++;
+  if(currentQ >= questions.length){
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults(){
+  document.getElementById('finalScore').textContent = score+'/'+questions.length;
+  let title, msg;
+  if(score >= 9){ title='Dominio excelente'; msg='Comprendes con solidez la creación de valor y las tres hipótesis de eficiencia de mercado.'; }
+  else if(score >= 7){ title='Buen desempeño'; msg='Tienes una base sólida; repasa las hipótesis débil, semifuerte y fuerte para afinar los matices.'; }
+  else if(score >= 5){ title='Vas por buen camino'; msg='Convendría repasar la diferencia entre valor contable y económico, y las implicaciones para inversión y financiación.'; }
+  else { title='A repasar los conceptos'; msg='Vuelve a la sección de Aspectos Teóricos antes de reintentar el quiz.'; }
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+  showScreen('results');
+}
+
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeIcon').innerHTML = isDark
+    ? '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/>'
+    : '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>';
+}
+
+const tickerTerms = ["CREACIÓN DE VALOR","VALOR ECONÓMICO","MERCADO EFICIENTE","HIPÓTESIS DÉBIL","HIPÓTESIS SEMIFUERTE","HIPÓTESIS FUERTE","COSTO DE CAPITAL","RIESGO Y RENDIMIENTO","DECISIONES DE INVERSIÓN","DECISIONES DE FINANCIACIÓN"];
+document.getElementById('tickerTrack').innerHTML = Array(2).fill(0).map(()=>
+  tickerTerms.map(t=>`<span><b>▲</b> ${t}</span>`).join('')
+).join('');
+
+buildConceptGrid();
+</script>
+</body>
+</html>
